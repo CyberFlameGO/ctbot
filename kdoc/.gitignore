@@ -1,0 +1,9 @@
+.gradle/
+.idea/
+build/
+.env.properties
+example.env.properties
+run.sh
+ctjs/
+*.iml
+out/

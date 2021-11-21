@@ -1,0 +1,35 @@
+{
+  "name": "ctbot",
+  "version": "1.0.0",
+  "description": "A Discord.js bot for the ChatTriggers discord server",
+  "main": "index.ts",
+  "repository": "https://github.com/ChatTriggers/ctbot-ts",
+  "author": "Matthew Olsson",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "NODE_ENV=production yarn dev",
+    "dev": "yarn generate-terms && yarn run-bot",
+    "run-bot": "ts-node index.ts",
+    "register-commands": "ts-node scripts/deploy-commands.ts",
+    "generate-terms": "cd kdoc > /dev/null && ./gradlew runMain && cd .. > /dev/null"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
+    "eslint": "^8.3.0",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "@discordjs/builders": "^0.8.2",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "@types/levenshtein": "^1.0.1",
+    "@types/wuzzy": "^0.1.0",
+    "discord-api-types": "^0.24.0",
+    "discord.js": "^13.3.1",
+    "dotenv": "^10.0.0",
+    "kotlin-parser-antlr": "^1.0.0",
+    "levenshtein": "^1.0.5"
+  }
+}
