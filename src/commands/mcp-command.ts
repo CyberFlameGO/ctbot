@@ -66,7 +66,7 @@ export default class MCPCommand extends Command {
         } else {
             const classes = classesFromName(name);
 
-            const title = `MCP method search results for "${name}"`;
+            const title = `MCP class search results for "${name}"`;
             const description = classes.map(clazz => {
                 return `**•** \`${clazz.path}\``;
             }).join('\n');
