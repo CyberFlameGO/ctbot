@@ -2,6 +2,7 @@ import './scripts/load-env';
 
 import { Client, Intents } from 'discord.js';
 import commands from './src/commands/index';
+import MessageListener from './src/MessageListener';
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
@@ -27,6 +28,10 @@ client.on('interactionCreate', async interaction => {
         });
     }
 });
+
+client.on('messageCreate', MessageListener.onMessageCreate);
+
+client.on('messageUpdate', MessageListener.onMessageUpdate);
 
 client.login(process.env.DISCORD_TOKEN);
 
