@@ -1,10 +1,9 @@
 export const TOKEN = process.env.DISCORD_TOKEN as string;
 export const CLIENT_ID = process.env.DISCORD_CLIENT_ID as string;
 export const GUILD_ID = process.env.DISCORD_GUILD_ID as string;
+export const BOTLAND_CHANNEL_ID = process.env.DISCORD_BOTLAND_CHANNEL_ID as string;
+export const MODULES_CHANNEL_ID = process.env.DISCORD_MODULES_CHANNEL_ID as string;
 
-export const CT_GUILD_ID = '119493402902528000';
-export const MODULES_CHANNEL_ID = '366740283943157760';
-export const BOTLAND_CHANNEL_ID = '435654238216126485';
 export const NO_EMOJI_ROLE_ID = '745047588381917216';
 export const NO_QUOTES_ROLE_ID = '746096240978296953';
 

@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction, GuildMemberRoleManager, MessageEmbed } from 'discord.js';
-import { CT_GUILD_ID, BOTLAND_CHANNEL_ID, ALLOWED_ROLES } from '../config';
+import { BOTLAND_CHANNEL_ID, ALLOWED_ROLES, GUILD_ID } from '../config';
 
 export type BuilderType = Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
 
@@ -23,7 +23,7 @@ export abstract class Command {
     isAllowed(interaction: CommandInteraction): boolean {
         const roles = [...(interaction.member.roles as GuildMemberRoleManager).cache.values()];
 
-        return interaction.guildId !== CT_GUILD_ID 
+        return interaction.guildId !== GUILD_ID 
             || process.env.NODE_ENV !== 'production' 
             || interaction.channelId === BOTLAND_CHANNEL_ID
             || roles.find(role => ALLOWED_ROLES.has(role.id)) !== undefined;

@@ -1,9 +1,8 @@
 import './scripts/load-env';
 
-import { Client, Intents } from 'discord.js';
-import commands from './src/commands/index';
-
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+import commands from './src/commands/index'; 
+import client from './src/client';
+import { closeWebsocket } from './src/websocket/websocket';
 
 client.once('ready', () => {
     console.log('Ready!');
@@ -31,5 +30,8 @@ client.on('interactionCreate', async interaction => {
 client.login(process.env.DISCORD_TOKEN);
 
 process.on('SIGINT', () => {
-    client.destroy();
+    closeWebsocket();
+    setTimeout(() => {
+        client.destroy();
+    }, 500);
 });
