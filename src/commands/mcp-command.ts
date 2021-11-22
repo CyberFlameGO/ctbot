@@ -1,9 +1,8 @@
 import { CommandInteraction } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { Command } from './Command';
-import { classesFromName, Field, fieldsFromName, methodsFromName } from '../mcp';
-import { sanitizeInput, extractTop, ratio, trimIndent } from '../utils';
-import terms from '../../kdoc/dist/terms.json';
+import { classesFromName, fieldsFromName, methodsFromName } from '../mcp';
+import { ratio, sanitizeInput, trimIndent } from '../utils';
 
 export default class MCPCommand extends Command {
     builder = new SlashCommandBuilder()
@@ -35,7 +34,7 @@ export default class MCPCommand extends Command {
             const fields = fieldsFromName(name, isObf);
             const sorted = owner ? fields.sort((a, b) => ratio(b.owner, owner) - ratio(a.owner, owner)) : fields;
 
-            const title = `MCP field search results for "${name}"`;
+            const title = `MCP field search results for "${sanitizeInput(name)}"`;
             const description = sorted.map(field => {
                 const firstName = isObf ? field.obfName : field.name;
                 const secondName = isObf ? field.name : field.obfName;
@@ -51,7 +50,7 @@ export default class MCPCommand extends Command {
             const methods = methodsFromName(name, isObf);
             const sorted = owner ? methods.sort((a, b) => ratio(b.owner, owner) - ratio(a.owner, owner)) : methods;
 
-            const title = `MCP method search results for "${name}"`;
+            const title = `MCP method search results for "${sanitizeInput(name)}"`;
             const description = sorted.map(method => {
                 const firstName = isObf ? method.obfName : method.name;
                 const secondName = isObf ? method.name : method.obfName;
