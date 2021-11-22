@@ -1,8 +1,9 @@
 import './scripts/load-env';
 
-import commands from './src/commands/index'; 
-import client from './src/client';
 import { closeWebsocket } from './src/websocket/websocket';
+import client from './src/client';
+import commands from './src/commands/index';
+import MessageListener from './src/MessageListener';
 
 client.once('ready', () => {
     console.log('Ready!');
@@ -26,6 +27,10 @@ client.on('interactionCreate', async interaction => {
         });
     }
 });
+
+client.on('messageCreate', MessageListener.onMessageCreate);
+
+client.on('messageUpdate', MessageListener.onMessageUpdate);
 
 client.login(process.env.DISCORD_TOKEN);
 
