@@ -19,35 +19,53 @@ object KDocGenerator {
     private val REPO_DIR = File(TARGET_DIR, "repo")
     private val DOKKA_DIR = File(TARGET_DIR, "dokka")
     private val JSON_DIR = File("./dist")
+    private const val REPO = "https://github.com/ChatTriggers/ct.js.git"
 
     @JvmStatic
     fun main(args: Array<String>) {
+        if (!shouldRebuildSearchTerms()) {
+            println("[KDoc] local repo is the same as remote, not rebuilding search terms")
+            return
+        }
+
+        println("[KDoc] cloning repo")
         cloneRepo()
+        println("[KDoc] building search terms")
         val terms = getSearchTerms()
         val json = Json.Default.encodeToString(terms)
 
+        println("[KDoc] writing to json")
         JSON_DIR.mkdirs()
         val jsonFile = File(JSON_DIR, "terms.json")
         jsonFile.writeText(json)
+        println("[KDoc] done building search terms")
+    }
+
+    private fun shouldRebuildSearchTerms(): Boolean {
+        if (!REPO_DIR.exists())
+            return true
+
+        return doGitOp {
+            val repo = Git.open(REPO_DIR)
+
+            val localHead = repo.repository.findRef("HEAD")
+            val remoteHead = Git.lsRemoteRepository().setRemote(REPO).call().find { it.name == "HEAD" }!!
+            localHead.objectId != remoteHead.objectId
+        }
     }
 
     private fun cloneRepo() {
         if (REPO_DIR.exists())
             REPO_DIR.deleteRecursively()
 
-        val out = System.out
-        System.setOut(PrintStream(object : OutputStream() {
-            override fun write(p0: Int) {}
-        }))
-
-        Git.cloneRepository()
-            .setURI("https://github.com/ChatTriggers/ct.js.git")
-            .setBranchesToClone(listOf("refs/heads/master"))
-            .setBranch("refs/heads/master")
-            .setDirectory(REPO_DIR)
-            .call()
-
-        System.setOut(out)
+        doGitOp {
+            Git.cloneRepository()
+                .setURI(REPO)
+                .setBranchesToClone(listOf("refs/heads/master"))
+                .setBranch("refs/heads/master")
+                .setDirectory(REPO_DIR)
+                .call()
+        }
     }
 
     private fun getDocs(): KotlinModuleDoc {
@@ -145,6 +163,18 @@ object KDocGenerator {
         }
 
         return terms
+    }
+
+    // slf4j is garbage
+    private inline fun <T> doGitOp(crossinline block: () -> T): T {
+        val out = System.out
+        System.setOut(PrintStream(object : OutputStream() {
+            override fun write(p0: Int) {}
+        }))
+        val result = block()
+        System.setOut(out)
+
+        return result
     }
 
     private fun List<String>.isPublicMember() = !contains("internal") && !contains("private")
