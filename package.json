@@ -11,7 +11,7 @@
     "start": "NODE_ENV=production yarn dev",
     "dev": "yarn generate-terms && yarn run-bot",
     "run-bot": "ts-node index.ts",
-    "register-commands": "ts-node scripts/deploy-commands.ts",
+    "register-commands": "ts-node scripts/register-commands.ts",
     "generate-terms": "cd kdoc > /dev/null && ./gradlew runMain && cd .. > /dev/null"
   },
   "devDependencies": {
