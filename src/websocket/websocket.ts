@@ -2,6 +2,7 @@ import { Channel, MessageEmbed, TextChannel } from 'discord.js';
 import WebSocket from 'ws';
 import client, { modulesChannel } from '../client';
 import { BOTLAND_CHANNEL_ID, GUILD_ID } from '../config';
+import { truncate } from '../utils';
 import { Event } from './types';
 
 const isTextChannel = (channel: Channel | undefined): channel is TextChannel => {
@@ -70,8 +71,8 @@ ws.on('message', data => {
         if (module.tags.length > 0)
             embed.addField('Tags', module.tags.join(', '), true);
 
-        const description = module.description.trim();
-        if (description.length > 0) 
+        const description = truncate(module.description.trim(), 600);
+        if (description.length > 0)
             embed.addField('Description', description, false);
 
         const image = module.image.trim();
@@ -89,7 +90,7 @@ ws.on('message', data => {
         embed.addField('Release Version', release.releaseVersion, true);
         embed.addField('Mod Version', release.modVersion, true);
 
-        const changelog = release.changelog.trim();
+        const changelog = truncate(release.changelog.trim(), 600);
         if (changelog.length > 0) 
             embed.addField('Changelog', changelog, false);
     }

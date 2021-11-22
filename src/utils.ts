@@ -47,3 +47,9 @@ export function extractTop<T>(target: string, options: T[], stringProducer: (arg
         .slice(0, count)
         .map(t => t.option);
 }
+
+export const truncate = (str: string, limit: number): string => {
+    if (str.length <= limit)
+        return str;
+    return str.substring(0, limit - 3) + '...';
+};
