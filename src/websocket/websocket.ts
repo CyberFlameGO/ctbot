@@ -1,17 +1,10 @@
-import { Channel, MessageEmbed, TextChannel } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 import WebSocket from 'ws';
-import client, { modulesChannel } from '../client';
-import { BOTLAND_CHANNEL_ID, GUILD_ID } from '../config';
+import { modulesChannel } from '../client';
 import { truncate } from '../utils';
 import { Event } from './types';
 
-const isTextChannel = (channel: Channel | undefined): channel is TextChannel => {
-    if (!channel)
-        return false;
-    return (channel as TextChannel).send !== undefined;
-};
-
-const ws = new WebSocket('ws://chattriggers.com/api/events');
+let ws = new WebSocket('ws://chattriggers.com/api/events');
 
 let heartbeatTimeout: NodeJS.Timer;
 
@@ -35,18 +28,9 @@ ws.on('open', () => {
 ws.on('close', (code, reason) => {
     console.log(`WebSocket closed. code=${code} reason=${reason.toString()}`);
     clearInterval(heartbeatTimeout);
-    if (manuallyClosed)
-        return;
 
-    const guild = client.guilds.cache.get(GUILD_ID);
-    if (!guild)
-        throw new Error('Cannot find CT guild');
-
-    const channel = guild.channels.cache.get(BOTLAND_CHANNEL_ID);
-    if (!isTextChannel(channel))
-        throw new Error('Cannot find #botland');
-
-    channel.send('<@110615438873853952> WebSocket unexpectedly closed');
+    if (!manuallyClosed)
+        ws = new WebSocket('ws://chattriggers.com/api/events');
 });
 
 ws.on('error', err => {
