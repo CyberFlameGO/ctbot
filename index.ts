@@ -4,7 +4,7 @@ import { Client, Intents } from 'discord.js';
 import commands from './src/commands/index';
 import MessageListener from './src/MessageListener';
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
 client.once('ready', () => {
     console.log('Ready!');
