@@ -1,6 +1,7 @@
 import { RESTPostAPIApplicationCommandsJSONBody } from 'discord-api-types';
 import { Command } from './Command';
 import DocsCommand from './docs-command';
+import FormattingCommand from './formatting-command';
 import HelpCommand from './help-command';
 import LearnJSCommand from './learn-js-command';
 import LinksCommand from './links-command';
@@ -31,5 +32,6 @@ commands.register(new HelpCommand());
 commands.register(new LinksCommand());
 commands.register(new NotWorkingCommand());
 commands.register(new MCPCommand());
+commands.register(new FormattingCommand());
 
 export default commands;
