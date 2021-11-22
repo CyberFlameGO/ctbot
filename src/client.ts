@@ -1,7 +1,7 @@
 import { Client, Guild, Intents, TextChannel } from 'discord.js';
 import { BOTLAND_CHANNEL_ID, GUILD_ID, MODULES_CHANNEL_ID } from './config';
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] });
 export default client;
 
 let ctGuild_: Guild | undefined;

@@ -21,6 +21,8 @@ export abstract class Command {
     }
 
     isAllowed(interaction: CommandInteraction): boolean {
+        if (!interaction.member)
+            return true;
         const roles = [...(interaction.member.roles as GuildMemberRoleManager).cache.values()];
 
         return interaction.guildId !== GUILD_ID 

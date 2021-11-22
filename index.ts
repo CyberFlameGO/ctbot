@@ -22,7 +22,7 @@ client.on('interactionCreate', async interaction => {
     } catch (error) {
         console.error(error);
         await interaction.reply({
-            content: 'There was an internal error while executing this command, please tell @Matt.',
+            content: 'There was an internal error while executing this command, please tell <@110615438873853952>.',
             ephemeral: true,
         });
     }
