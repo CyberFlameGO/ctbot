@@ -68,7 +68,7 @@ export default class MCPCommand extends Command {
 
             const title = `MCP method search results for "${name}"`;
             const description = classes.map(clazz => {
-                return `**•** ${clazz.path}`;
+                return `**•** \`${clazz.path}\``;
             }).join('\n');
 
             embed.setTitle(title).setDescription(description);
