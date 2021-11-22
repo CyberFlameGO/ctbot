@@ -52,7 +52,7 @@ const init = async () => {
         const obfParts = obfPath.split('/');
         const obfName = obfParts[obfParts.length - 1];
         const ownerParts = path.split('/');
-        const owner = ownerParts.slice(0, -2).join('/');
+        const owner = ownerParts.slice(0, -1).join('/');
 
         return { name, obfName, owner };
     });
@@ -64,7 +64,7 @@ const init = async () => {
         const obfParts = obfPath.split('/');
         const obfName = obfParts[obfParts.length - 1];
         const ownerParts = path.split('/');
-        const owner = ownerParts.slice(0, -2).join('/');
+        const owner = ownerParts.slice(0, -1).join('/');
 
         return { 
             name,
