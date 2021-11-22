@@ -24,7 +24,6 @@ export const closeWebsocket = () => {
 
 const heartbeat = () => {
     ws.ping('still alive');
-    console.log('heartbeat');
 };
 
 ws.on('open', () => {
