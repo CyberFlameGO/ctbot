@@ -1,5 +1,6 @@
 import './scripts/load-env';
 
+import Cache from 'node-cache';
 import { closeWebsocket } from './src/websocket/websocket';
 import client from './src/client';
 import commands from './src/commands/index';
@@ -9,9 +10,22 @@ client.once('ready', () => {
     console.log('Ready!');
 });
 
+const commandCache = new Cache();
+
 client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand())
         return;
+
+    const cacheEntry = commandCache.get(interaction.member.user.id) as number | undefined;
+    if (cacheEntry && cacheEntry > Date.now() - 10_000) {
+        interaction.reply({
+            content: 'You are entering commands too quickly!',
+            ephemeral: true,
+        });
+        return;
+    }
+
+    commandCache.set(interaction.member.user.id, Date.now());
 
     const command = commands.get(interaction.commandName);
     if (!command)
