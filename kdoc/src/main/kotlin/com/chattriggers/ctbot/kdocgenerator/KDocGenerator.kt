@@ -97,9 +97,9 @@ object KDocGenerator {
 
         docs.classes.filter { it.modifiers.isPublicMember() }.forEach { clazz ->
             val name = clazz.id.replace("${clazz.`package`}.", "")
-            val pkg = clazz.`package`.replace('.', '/')
+            val pkg = clazz.`package`
 
-            val urlBase = "https://chattriggers.com/javadocs/$pkg/$name.html"
+            val urlBase = "https://chattriggers.com/javadocs/-chat-triggers/$pkg/${name.urlFormat()}"
 
             terms.add(SearchTerm(
                 clazz.name,
@@ -110,22 +110,13 @@ object KDocGenerator {
             clazz.fields.filter { it.modifiers.isPublicMember() }.forEach { field ->
                 terms.add(SearchTerm(
                     field.name,
-                    "$urlBase#${field.name}",
+                    "$urlBase/${field.name.urlFormat()}.html",
                     "field ${field.name}"
                 ))
             }
 
             clazz.methods.filter { it.modifiers.isPublicMember() }.forEach { method ->
-                val url = buildString {
-                    append(urlBase)
-                    append("#${method.name}-")
-
-                    if (method.receiver != null)
-                        append(":Dreceiver-")
-
-                    append(method.parameters.joinToString("-") { it.name })
-                    append('-')
-                }
+                val url = "$urlBase/${method.name.urlFormat()}.html"
 
                 val originalReturnValue = method.returnValue.name
                 val returnType = when {
@@ -178,6 +169,8 @@ object KDocGenerator {
     }
 
     private fun List<String>.isPublicMember() = !contains("internal") && !contains("private")
+
+    private fun String.urlFormat() = this.replace(Regex("([A-Z])"), "-$1").lowercase()
 
     @Serializable
     data class SearchTerm(
