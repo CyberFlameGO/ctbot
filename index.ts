@@ -1,7 +1,6 @@
 import './scripts/load-env';
 
 import Cache from 'node-cache';
-import { closeWebsocket } from './src/websocket/websocket';
 import client from './src/client';
 import commands from './src/commands/index';
 import MessageListener from './src/MessageListener';
@@ -49,7 +48,6 @@ client.on('messageUpdate', MessageListener.onMessageUpdate);
 client.login(process.env.DISCORD_TOKEN);
 
 process.on('SIGINT', () => {
-    closeWebsocket();
     setTimeout(() => {
         client.destroy();
     }, 500);
