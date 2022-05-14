@@ -28,6 +28,8 @@ object KDocGenerator {
             return
         }
 
+        TARGET_DIR.mkdirs()
+
         println("[KDoc] cloning repo")
         cloneRepo()
         println("[KDoc] building search terms")
