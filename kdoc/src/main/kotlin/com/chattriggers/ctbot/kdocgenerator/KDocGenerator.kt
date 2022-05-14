@@ -23,12 +23,14 @@ object KDocGenerator {
 
     @JvmStatic
     fun main(args: Array<String>) {
+        TARGET_DIR.mkdirs()
+        DOKKA_DIR.mkdirs()
+        JSON_DIR.mkdirs()
+
         if (!shouldRebuildSearchTerms()) {
             println("[KDoc] local repo is the same as remote, not rebuilding search terms")
             return
         }
-
-        TARGET_DIR.mkdirs()
 
         println("[KDoc] cloning repo")
         cloneRepo()
