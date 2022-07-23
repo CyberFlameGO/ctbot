@@ -1,5 +1,3 @@
-import Levenshtein from 'levenshtein';
-
 // Couldn't figure out how to use these modules without typescript yelling at me
 // so I just copy-pasted them here
 //
@@ -28,6 +26,39 @@ export const trimIndent = (template: TemplateStringsArray, ...substitutions: str
     return string.replace(regex, '').trim();
 };
 
+export const truncate = (str: string, limit: number): string => {
+    if (str.length <= limit)
+        return str;
+    return str.substring(0, limit - 3) + '...';
+};
+
+const trigrams = (s: string): Set<string> => {
+    const l = new Set<string>();
+    for (let i = 0; i < s.length - 2; i++) {
+        l.add(s.substring(i, i + 3));
+    }
+    return l;
+};
+
+export const trigramSimilarity = (a: string, b: string): number => {
+    const aTrigrams = trigrams(a);
+    const bTrigrams = trigrams(b);
+
+    const intersections = new Set<string>();
+    const union = new Set<string>();
+
+    for (const value of aTrigrams) {
+        union.add(value);
+        if (bTrigrams.has(value))
+            intersections.add(value);
+    }
+
+    for (const value of bTrigrams)
+        union.add(value);
+
+    return intersections.size / union.size;
+};
+
 export const sanitizeInput = (input: string): string => input
     .replaceAll('@', '\\@')
     .replaceAll('~~', '\\~\\~')
@@ -35,21 +66,16 @@ export const sanitizeInput = (input: string): string => input
     .replaceAll('`', '\\`')
     .replaceAll('_', '\\_');
 
-export const ratio = (a: string, b: string) => new Levenshtein(a, b).distance;
-
 export function extractTop<T>(target: string, options: T[], stringProducer: (arg: T) => string, count: number): T[] {
+    target = target.toLowerCase();
     return options
         .map(option => {
-            const str = stringProducer(option);
-            return { option, string: str, distance: ratio(target, str) };
+            return { 
+                option, 
+                similarity: trigramSimilarity(target, stringProducer(option).toLowerCase()),
+            };
         })
-        .sort((a, b) => a.distance - b.distance)
-        .slice(0, count)
-        .map(t => t.option);
+        .sort((a, b) => b.similarity - a.similarity)
+        .map(t => t.option)
+        .slice(0, count);
 }
-
-export const truncate = (str: string, limit: number): string => {
-    if (str.length <= limit)
-        return str;
-    return str.substring(0, limit - 3) + '...';
-};

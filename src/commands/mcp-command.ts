@@ -2,7 +2,7 @@ import { CommandInteraction } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { Command } from './Command';
 import { classesFromName, fieldsFromName, methodsFromName } from '../mcp';
-import { ratio, sanitizeInput, trimIndent } from '../utils';
+import { trigramSimilarity, sanitizeInput, trimIndent } from '../utils';
 
 export default class MCPCommand extends Command {
     builder = new SlashCommandBuilder()
@@ -32,7 +32,7 @@ export default class MCPCommand extends Command {
 
         if (type === 'field') {
             const fields = fieldsFromName(name, isObf);
-            const sorted = owner ? fields.sort((a, b) => ratio(b.owner, owner) - ratio(a.owner, owner)) : fields;
+            const sorted = owner ? fields.sort((a, b) => trigramSimilarity(b.owner, owner) - trigramSimilarity(a.owner, owner)) : fields;
 
             const title = `MCP field search results for "${sanitizeInput(name)}"`;
             const description = sorted.map(field => {
@@ -48,7 +48,7 @@ export default class MCPCommand extends Command {
             embed.setTitle(title).setDescription(description);
         } else if (type === 'method') {
             const methods = methodsFromName(name, isObf);
-            const sorted = owner ? methods.sort((a, b) => ratio(b.owner, owner) - ratio(a.owner, owner)) : methods;
+            const sorted = owner ? methods.sort((a, b) => trigramSimilarity(b.owner, owner) - trigramSimilarity(a.owner, owner)) : methods;
 
             const title = `MCP method search results for "${sanitizeInput(name)}"`;
             const description = sorted.map(method => {
