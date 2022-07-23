@@ -1,8 +1,16 @@
+import { readFileSync } from 'fs';
 import { CommandInteraction } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { Command } from './Command';
 import { sanitizeInput, extractTop } from '../utils';
-import terms from '../../kdoc/dist/terms.json';
+
+interface Term {
+    name: string;
+    descriptor: string;
+    url: string;
+}
+
+let terms: Term[] | undefined;
 
 export default class DocsCommand extends Command {
     builder = new SlashCommandBuilder()
@@ -14,10 +22,21 @@ export default class DocsCommand extends Command {
             .setRequired(true));
 
     async execute(interaction: CommandInteraction): Promise<void> {
+        if (terms === undefined) {
+            const termsPath = process.env.TERMS_PATH;
+            if (termsPath === undefined)
+                throw new Error('TERMS_PATH environment variable not found');
+            terms = JSON.parse(readFileSync(termsPath, 'utf8'));
+        }
+
         const term = interaction.options.getString('search-term', true);
-        const top = extractTop(term, terms, s => s.name, 5);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const top = extractTop(term, terms!, s => s.name, 5);
         const title = `Search results for "${sanitizeInput(term)}"`;
-        const description = top.map(term => `[${term.descriptor}](${term.url})`).join('\n');
+        const description = top.map(term => {
+            const url = `https://chattriggers.com/javadocs/${term.url}`;
+            return `[${term.descriptor}](${url})`;
+        }).join('\n');
 
         const embed = this.makeEmbed(interaction)
             .setTitle(title)

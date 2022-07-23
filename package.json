@@ -9,10 +9,8 @@
   "private": true,
   "scripts": {
     "start": "NODE_ENV=production yarn dev",
-    "dev": "yarn generate-terms && yarn run-bot",
-    "run-bot": "ts-node index.ts",
-    "register-commands": "ts-node scripts/register-commands.ts",
-    "generate-terms": "cd kdoc > /dev/null && ./gradlew runMain && cd .. > /dev/null"
+    "dev": "ts-node index.ts",
+    "register-commands": "ts-node scripts/register-commands.ts"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.4.0",
